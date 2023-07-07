@@ -44,3 +44,33 @@ export const obtenerProducto = async (req, res) => {
         });
     }
 };
+
+export const borrarProducto = async (req, res) => {
+    try {
+        //Buscar en la BD la documento producto mediante el id
+        await Producto.findByIdAndDelete(req.params.id);
+        res.status(200).json({
+            mensaje: "EL producto fue eliminado correctamente"
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({
+            mensaje: "Error, no se pudo borrar el producto",
+        });
+    }
+};
+
+export const editarProducto = async (req, res) => {
+    try {
+        //Buscar en la BD la documento producto mediante el id
+        await Producto.findByIdAndUpdate(req.params.id, req.body);
+        res.status(200).json({
+            mensaje: "El producto fue actualizado correctamente"
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({
+            mensaje: "Error, no se pudo borrar el producto",
+        });
+    }
+};
