@@ -1,3 +1,4 @@
+import { validationResult } from "express-validator";
 import Producto from "../models/producto";
 
 export const controladorPrueba = (req, res) => {
@@ -6,6 +7,15 @@ export const controladorPrueba = (req, res) => {
 
 export const crearProducto = async (req, res) => {
     try {
+        //trabajar con los resultados de la validacion
+        const errors = validationResult(req);
+        //errors.isEmpty(), true:esta vacio, false:Tiene errores
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                errores: errors.array(),
+            });
+        }
+
         const productoNuevo = new Producto(req.body);
         await productoNuevo.save();
         res.status(201).json({
@@ -50,8 +60,8 @@ export const borrarProducto = async (req, res) => {
         //Buscar en la BD la documento producto mediante el id
         await Producto.findByIdAndDelete(req.params.id);
         res.status(200).json({
-            mensaje: "EL producto fue eliminado correctamente"
-        })
+            mensaje: "EL producto fue eliminado correctamente",
+        });
     } catch (error) {
         console.log(error);
         res.status(404).json({
@@ -65,8 +75,8 @@ export const editarProducto = async (req, res) => {
         //Buscar en la BD la documento producto mediante el id
         await Producto.findByIdAndUpdate(req.params.id, req.body);
         res.status(200).json({
-            mensaje: "El producto fue actualizado correctamente"
-        })
+            mensaje: "El producto fue actualizado correctamente",
+        });
     } catch (error) {
         console.log(error);
         res.status(404).json({
