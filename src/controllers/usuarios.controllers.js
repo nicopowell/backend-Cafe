@@ -29,8 +29,16 @@ export const obtenerUsuario = async (req, res) => {
 
 export const crearUsuario = async (req, res) => {
     try {
-        //trabajar con los resultados de la validacion
+        const { email } = req.body;
+
+        let usuario = await Usuario.findOne({ email })
+        if(usuario) {
+            return res.status(400).json({
+                mensaje: "Ya existe un usuario con el correo enviado"
+            })
+        }
         const errors = validationResult(req);
+
         //errors.isEmpty(), true:esta vacio, false:Tiene errores
         if (!errors.isEmpty()) {
             return res.status(400).json({
@@ -42,6 +50,8 @@ export const crearUsuario = async (req, res) => {
         await usuarioNuevo.save();
         res.status(201).json({
             mensaje: "El usuario fue creado correctamente",
+            nombre: usuario.nombre,
+            uid: usuario._id,
         });
     } catch (error) {
         console.log(error);
