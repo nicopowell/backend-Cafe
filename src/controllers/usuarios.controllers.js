@@ -1,6 +1,6 @@
 import { validationResult } from "express-validator";
 import Usuario from "../models/usuario"
-
+import bcrypt from "bcrypt"
 export const obtenerListaUsuarios = async (req, res) => {
     try {
         //Buscar en la BD la collection de productos
@@ -29,7 +29,7 @@ export const obtenerUsuario = async (req, res) => {
 
 export const crearUsuario = async (req, res) => {
     try {
-        const { email } = req.body;
+        const { email, password } = req.body;
 
         let usuario = await Usuario.findOne({ email })
         if(usuario) {
@@ -47,6 +47,11 @@ export const crearUsuario = async (req, res) => {
         }
 
         const usuarioNuevo = new Usuario(req.body);
+
+        //encriptar el password
+        const salt = bcrypt.genSaltSync(10)
+        usuarioNuevo.password = bcrypt.hashSync(password, salt)
+
         await usuarioNuevo.save();
         res.status(201).json({
             mensaje: "El usuario fue creado correctamente",
