@@ -30,7 +30,7 @@ router
     );
 router.route("/usuarios/:id").get(obtenerUsuario);
 
-router.route("/usuario/login").post(
+router.route("/usuarios/login").post(
   [
       check("email", "El email es obligatorio").isEmail(),
       check("password", "El password debe de ser de 6 caracteres")
